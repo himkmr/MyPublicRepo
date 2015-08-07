@@ -7,6 +7,7 @@
  * Everything uses setters and getter methods
  */
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 public class InvoiceApp {
 
@@ -30,14 +31,37 @@ public class InvoiceApp {
 			if(itemcode.equals("") || itemcode.equals(" ") || itemcode.equals(null) || itemcode.length() < 2 ||itemcode.equals("\n"))
 				break;
 			
-			
-			System.out.println("Enter Item Quantity:  ");
-			int qu = sc.nextInt();
-			while(qu < 0 || qu >49 )
+			double price = 0;
+			try{
+				System.out.println("starting from try");
+				System.out.println("Enter Item price:  ");
+				price = sc.nextDouble();
+			}
+			catch(InputMismatchException e)
 			{
-				System.out.println("Out of Range Enter again");
-				qu = sc.nextInt();
+				System.out.println("Expected double \n");
+				e.printStackTrace(System.err);           //or System.out
+				System.out.flush();
+				sc.nextLine();//trash
+				continue;	//continue with next transaction
 				
+			}
+			System.out.println("Enter Item Quantity:  ");
+			int qu = 0;
+			try{
+					qu = sc.nextInt();
+					while(qu < 0 || qu >49 )
+					{
+						System.out.println("Out of Range Enter again");
+						qu = sc.nextInt();
+				
+					}
+			}catch(InputMismatchException e){
+				
+				System.out.println("Expected Integer for Quantity");
+				e.printStackTrace(System.err);	      //or System.out
+				sc.nextLine();   //trash
+				continue;	//continue with next transaction
 			}
 			sc.nextLine();//trash
 			quantity_array[index] = qu;
@@ -46,7 +70,7 @@ public class InvoiceApp {
 			if(token.equalsIgnoreCase("y"))
 				taxable = true;
 			
-			bArray[index] = Item_Invoice.getItem(itemcode, taxable);		
+			bArray[index] = Item_Invoice.getItem(itemcode, taxable, price);		
 			index++;
 		}
 		
@@ -82,8 +106,7 @@ public class InvoiceApp {
 			System.out.println("Grand Total :"+ItemData.formatPrice((taxablesubtotal +untaxablesubtotal+tax)));
 					
 		}
-		
-		
+				
 		sc.close();
 		
 

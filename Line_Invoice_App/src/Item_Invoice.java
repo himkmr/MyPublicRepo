@@ -3,7 +3,7 @@ This class creates ItemData Object and uses its setters methods to set Data
 */
 public class Item_Invoice {
 
-	public static ItemData getItem(String code, boolean taxable)
+	public static ItemData getItem(String code, boolean taxable, double price)
 	{
 		ItemData d = new ItemData();		// creating new ItemData class
 		if(code.equals("book"))
@@ -25,6 +25,12 @@ public class Item_Invoice {
 			d.setTaxable(taxable);
 			d.setItem_code("Television");	
 					
+		}
+		else
+		{
+			d.setPrice(1000);
+			d.setTaxable(taxable);
+			d.setItem_code("Unknown Item");
 		}
 	
 		return d;	
