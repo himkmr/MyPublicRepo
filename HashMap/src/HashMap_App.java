@@ -1,5 +1,11 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -12,33 +18,48 @@ public static void main(String[] ar)
 	HashMap<Integer, String> myMap = new HashMap<Integer, String>();
 
 	Scanner sc = new Scanner(System.in);
-	//write to file
+
 		System.out.println("enter file name: ");
 		String file = sc.nextLine();
 		String filename = (System.getProperty("user.dir") + File.separatorChar +file);
-		PrintWriter writer= null;
+
+		FileReader fr = null;
+		BufferedReader br = null;
+		FileWriter writer=null;
 		try {
-			writer = new PrintWriter(filename);
-		} catch (FileNotFoundException e) {
+			writer = new FileWriter(filename,true);
+		} catch (IOException e2) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e2.printStackTrace();
+		}
+		try {
+			fr = new FileReader(filename);
+			br = new BufferedReader(fr);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
 		}
 
-	while(true)
+		
+	String line = "";
+	while(line!=null)
 	{
-		System.out.println("Enter Integer: ");
-		int key = sc.nextInt();
-		System.out.println("Enter Associateed String: ");
-		sc.nextLine();	//trash 
-		String value = sc.nextLine();
-		myMap.put(key, value);
-		writer.println(key+"   "+value);
-		System.out.println("Enter more? (y/n)");
-		String response = sc.nextLine();
-		if(!response.equalsIgnoreCase("y"))
-			break;
-	
+		
+		try {
+			line = br.readLine();
+			if(line==null)
+				break;
+			String arr[] = line.split("(\\s)+");
+			int num = Integer.parseInt(arr[0]);
+			myMap.put(num, arr[1]);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			
+		
+			}
 	}
+		
+	
+	
 	
 	while(true)
 	{
@@ -50,7 +71,12 @@ public static void main(String[] ar)
 			System.out.println("Key not found, please enter value to add");
 			String value = sc.nextLine();
 			myMap.put(key, value);		
-			writer.println(key+"   "+value);
+			try {
+				writer.write(key+"   "+value+"\n");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
   		System.out.println("key: "+ key + "       Value: " +myMap.get(key));
 		System.out.println(" more? (y/n)");
@@ -61,7 +87,12 @@ public static void main(String[] ar)
 	}
 	
 	
-	writer.close();
+	try {
+		writer.close();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	sc.close();
 	
 	
